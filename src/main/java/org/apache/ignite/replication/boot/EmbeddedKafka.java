@@ -1,15 +1,5 @@
-package org.apache.ignite.replication.kafka;
+package org.apache.ignite.replication.boot;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Properties;
-import java.util.Set;
 import kafka.admin.AdminUtils;
 import kafka.server.KafkaConfig;
 import kafka.server.KafkaServerStartable;
@@ -25,10 +15,14 @@ import org.apache.zookeeper.server.NIOServerCnxnFactory;
 import org.apache.zookeeper.server.ServerCnxnFactory;
 import org.apache.zookeeper.server.ZooKeeperServer;
 
-/**
- * @author Andrei_Yakushin
- * @since 1/23/2017 6:50 PM
- */
+import java.io.File;
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.nio.file.Files;
+import java.util.*;
+
+import static java.lang.Thread.sleep;
+
 public class EmbeddedKafka {
     private static final String LOCALHOST = "localhost";
     private static final int ZOOKEEPER_TICK_TIME = 500;
@@ -56,6 +50,14 @@ public class EmbeddedKafka {
         embeddedKafka.setUp();
 
         //do some work
+        System.out.println("Started");
+        while (true) {
+            try {
+                sleep(1000L);
+            } catch (InterruptedException e) {
+                break;
+            }
+        }
 
         embeddedKafka.tearDown();
     }
