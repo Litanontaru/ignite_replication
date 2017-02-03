@@ -2,9 +2,10 @@ package org.apache.ignite.replication.message;
 
 import org.apache.ignite.lang.IgniteBiTuple;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class TransactionMetadata {
+public class TransactionMetadata implements Serializable {
     private final long transactionId;
     private final List<IgniteBiTuple<String, List>> cachesKeys;
 
