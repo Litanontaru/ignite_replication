@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:c="http://www.springframework.org/schema/c"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/util
+        http://www.springframework.org/schema/util/spring-util-2.5.xsd">
+
+    <util:properties id="consumerProperties" location="consumer.properties"/>
+    <util:properties id="producerProperties" location="producer.properties"/>
+
+    <bean id="ignite" class="org.apache.ignite.configuration.IgniteConfiguration" scope="prototype">
+        <property name="cacheConfiguration">
+            <list>
+                <ref bean="someUserCache"/>
+            </list>
+        </property>
+
+        <property name="discoverySpi">
+            <bean class="org.apache.ignite.spi.discovery.tcp.TcpDiscoverySpi">
+                <property name="ipFinder">
+                    <bean class="org.apache.ignite.spi.discovery.tcp.ipfinder.vm.TcpDiscoveryVmIpFinder">
+                        <property name="addresses">
+                            <list>
+                                <value>127.0.0.1:47500..47509</value>
+                            </list>
+                        </property>
+                    </bean>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <!-- Caches configuration -->
+    <bean id="someUserCache" class="org.apache.ignite.configuration.CacheConfiguration"
+          p:name="userCache"
+          p:writeThrough="true"
+          p:cacheMode="PARTITIONED"
+          p:atomicityMode="TRANSACTIONAL"
+          p:backups="2"
+          p:cacheStoreFactory-ref="data-capturer-bus-factory"/>
+
+    <!--Internal config-->
+    <bean id="data-capturer-bus-factory" class="org.apache.ignite.replication.publisher.DataCapturerBusFactory"/>
+
+    <bean id="id-sequencer" class="org.apache.ignite.replication.publisher.KafkaIdSequencer"
+          c:topic="id"
+          c:kafkaFactory-ref="kafkaFactory"
+          c:dataRecoveryConfig-ref="dataRecoveryConfig"/>
+
+    <util:list id="key-value-listeners" value-type="org.apache.ignite.replication.publisher.KeyValueListener">
+        <ref bean="publisher"/>
+    </util:list>
+
+    <bean id="publisher" class="org.apache.ignite.replication.publisher.SynchronousPublisher"
+          c:producer-ref="remote.kafka"/>
+
+    <bean id="remote.kafka" class="org.apache.ignite.replication.publisher.TransactionalKafkaProducer"
+          c:dataRecoveryConfig-ref="dataRecoveryConfig"
+          c:serializer-ref="serializer"
+          c:kafkaFactory-ref="kafkaFactory"/>
+
+    <bean id="dataRecoveryConfig" class="org.apache.ignite.replication.publisher.DataRecoveryConfig"
+          p:remoteTopic="remote"
+          p:consumerConfig-ref="consumerProperties"
+          p:producerConfig-ref="producerProperties"/>
+
+    <bean id="serializer" class="org.apache.ignite.replication.publisher.SerializerImpl"/>
+
+    <bean id="kafkaFactory" class="org.apache.ignite.replication.kafka.KafkaFactoryImpl" destroy-method="closeAll"/>
+</beans>
