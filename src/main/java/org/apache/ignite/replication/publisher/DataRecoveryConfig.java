@@ -5,7 +5,6 @@ import java.util.Properties;
 
 public class DataRecoveryConfig implements Serializable {
     private String remoteTopic;
-    private String localTopic;
     private Properties consumerConfig;
     private Properties producerConfig;
 
@@ -15,14 +14,6 @@ public class DataRecoveryConfig implements Serializable {
 
     public void setRemoteTopic(String remoteTopic) {
         this.remoteTopic = remoteTopic;
-    }
-
-    public String getLocalTopic() {
-        return localTopic;
-    }
-
-    public void setLocalTopic(String localTopic) {
-        this.localTopic = localTopic;
     }
 
     public Properties getConsumerConfig() {

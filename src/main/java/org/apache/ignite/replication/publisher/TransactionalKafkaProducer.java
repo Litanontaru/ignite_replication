@@ -21,7 +21,7 @@ public class TransactionalKafkaProducer {
     private final Serializer serializer;
 
     public TransactionalKafkaProducer(DataRecoveryConfig dataRecoveryConfig, Serializer serializer, KafkaFactory kafkaFactory) {
-        this.dataTopic = dataRecoveryConfig.getLocalTopic();
+        this.dataTopic = dataRecoveryConfig.getRemoteTopic();
         this.producer = kafkaFactory.producer(dataRecoveryConfig.getProducerConfig());
         this.serializer = serializer;
         partitions = producer.partitionsFor(dataTopic).size();
