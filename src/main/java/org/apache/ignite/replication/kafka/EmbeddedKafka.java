@@ -1,4 +1,4 @@
-package org.apache.ignite.replication.boot;
+package org.apache.ignite.replication.kafka;
 
 import kafka.admin.AdminUtils;
 import kafka.server.KafkaConfig;
