@@ -20,7 +20,7 @@ public class LeadServiceImpl implements LeadService {
     }
 
     @Override
-    public void notifyCommitted(UUID consumer, List<Long> ids) {
+    public void notifyCommitted(List<Long> ids) {
         lead.notifyCommitted(ids);
     }
 

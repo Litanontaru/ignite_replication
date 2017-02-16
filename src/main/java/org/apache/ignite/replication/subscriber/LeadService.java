@@ -12,7 +12,9 @@ import java.util.UUID;
  * @since 2/16/2017 12:09 PM
  */
 public interface LeadService extends Service {
+    String NAME = "Lead";
+
     List<Long> notifyRead(UUID consumer, Map<Long, List<IgniteBiTuple<String, Object>>> transactions);
 
-    void notifyCommitted(UUID consumer, List<Long> ids);
+    void notifyCommitted(List<Long> ids);
 }
