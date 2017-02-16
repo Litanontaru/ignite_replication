@@ -13,29 +13,30 @@
     <util:properties id="consumerProperties" location="consumer.properties"/>
     <util:properties id="producerProperties" location="producer.properties"/>
 
-    <bean id="ignite" class="org.apache.ignite.configuration.IgniteConfiguration" scope="prototype">
-        <property name="cacheConfiguration">
-            <list>
-                <ref bean="someUserCache"/>
-            </list>
-        </property>
-
-        <property name="discoverySpi">
-            <bean class="org.apache.ignite.spi.discovery.tcp.TcpDiscoverySpi">
-                <property name="ipFinder">
-                    <bean class="org.apache.ignite.spi.discovery.tcp.ipfinder.vm.TcpDiscoveryVmIpFinder">
-                        <property name="addresses">
-                            <list>
-                                <value>127.0.0.1:47500..47509</value>
-                            </list>
-                        </property>
-                    </bean>
+    <!--Ignite config-->
+    <bean id="discoverySpi" class="org.apache.ignite.spi.discovery.tcp.TcpDiscoverySpi">
+        <property name="ipFinder">
+            <bean class="org.apache.ignite.spi.discovery.tcp.ipfinder.vm.TcpDiscoveryVmIpFinder">
+                <property name="addresses">
+                    <list>
+                        <value>127.0.0.1:47500..47509</value>
+                    </list>
                 </property>
             </bean>
         </property>
     </bean>
 
+    <bean id="ignite" class="org.apache.ignite.configuration.IgniteConfiguration" scope="prototype"
+          p:localHost="127.0.0.1"
+          p:discoverySpi-ref="discoverySpi"
+          p:cacheConfiguration-ref="cacheConfig">
+    </bean>
+
     <!-- Caches configuration -->
+    <util:list id="cacheConfig">
+        <ref bean="someUserCache"/>
+    </util:list>
+
     <bean id="someUserCache" class="org.apache.ignite.configuration.CacheConfiguration"
           p:name="userCache"
           p:writeThrough="true"

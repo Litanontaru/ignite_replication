@@ -45,23 +45,6 @@ public class EmbeddedKafka {
         this.kafkaPort = kafkaPort;
     }
 
-    public static void main(String[] args) {
-        EmbeddedKafka embeddedKafka = new EmbeddedKafka(3, 2182, 9096);
-        embeddedKafka.setUp();
-
-        //do some work
-        System.out.println("Started");
-        while (true) {
-            try {
-                sleep(1000L);
-            } catch (InterruptedException e) {
-                break;
-            }
-        }
-
-        embeddedKafka.tearDown();
-    }
-
     public void setUp() {
         try {
             startZookeeper();
