@@ -40,7 +40,7 @@ public class Reader {
 
     public void start() {
         running = true;
-        LeadService lead = ignite.services().service(LeadService.NAME);
+        LeadService lead = ignite.services().serviceProxy(LeadService.NAME, LeadService.class, false);
         UUID nodeId = ignite.cluster().localNode().id();
 
         try (Consumer<ByteBuffer, ByteBuffer> consumer = kafkaFactory.consumer(dataRecoveryConfig.getConsumerConfig())) {
