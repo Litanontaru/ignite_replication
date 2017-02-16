@@ -5,9 +5,6 @@ import org.apache.kafka.clients.producer.Producer;
 
 import java.util.Properties;
 
-/**
- * Created by Andrei_Yakushin on 2/3/2017.
- */
 public interface KafkaFactory {
     <K, V> Producer<K, V> producer(Properties properties);
 
