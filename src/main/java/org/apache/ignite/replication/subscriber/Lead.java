@@ -21,13 +21,17 @@ public class Lead {
 
     private volatile boolean running = false;
 
-    public List<Long> notifyRead(UUID consumer, long id, List<IgniteBiTuple<String, Object>> scope) {
-        tasks.add(() -> all.add(new TxInfo(consumer, id, scope)));
+    public List<Long> notifyRead(UUID consumer, Map<Long, List<IgniteBiTuple<String, Object>>> transactions) {
+        tasks.add(() -> transactions.entrySet().forEach(tx -> addTransaction(consumer, tx)));
         List<Long> result = toCommit.remove(consumer);
         return result == null ? Collections.emptyList() : result;
     }
 
-    public void notifyCommitted(UUID consumer, List<Long> ids) {
+    private void addTransaction(UUID consumer, Map.Entry<Long, List<IgniteBiTuple<String, Object>>> transaction) {
+        all.add(new TxInfo(consumer, transaction.getKey(), transaction.getValue()));
+    }
+
+    public void notifyCommitted(List<Long> ids) {
         tasks.add(() -> committed.addAll(ids));
     }
 

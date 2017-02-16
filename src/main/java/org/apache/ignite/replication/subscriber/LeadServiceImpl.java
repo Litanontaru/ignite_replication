@@ -4,6 +4,7 @@ import org.apache.ignite.lang.IgniteBiTuple;
 import org.apache.ignite.services.ServiceContext;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -14,13 +15,13 @@ public class LeadServiceImpl implements LeadService {
     private transient Lead lead;
 
     @Override
-    public List<Long> notifyRead(UUID consumer, long id, List<IgniteBiTuple<String, Object>> scope) {
-        return lead.notifyRead(consumer, id, scope);
+    public List<Long> notifyRead(UUID consumer, Map<Long, List<IgniteBiTuple<String, Object>>> transactions) {
+        return lead.notifyRead(consumer, transactions);
     }
 
     @Override
     public void notifyCommitted(UUID consumer, List<Long> ids) {
-        lead.notifyCommitted(consumer, ids);
+        lead.notifyCommitted(ids);
     }
 
     @Override
