@@ -29,8 +29,7 @@
     <bean id="ignite" class="org.apache.ignite.configuration.IgniteConfiguration" scope="prototype"
           p:localHost="127.0.0.2"
           p:discoverySpi-ref="discoverySpi"
-          p:cacheConfiguration-ref="cacheConfig">
-    </bean>
+          p:cacheConfiguration-ref="cacheConfig"/>
 
     <!-- Caches configuration -->
     <util:list id="cacheConfig">
