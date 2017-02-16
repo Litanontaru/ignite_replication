@@ -10,6 +10,11 @@ import org.apache.ignite.Ignition;
 public class DRIgnite {
     public static void main(String[] args) {
         Ignite ignite = Ignition.start("dr-ignite-config.xml");
+
+        //add more nodes
+        Ignition.start("dr-ignite-config.xml");
+        Ignition.start("dr-ignite-config.xml");
+
         System.out.println("Started");
     }
 }

@@ -41,6 +41,7 @@
     </util:list>
 
     <bean id="ignite" class="org.apache.ignite.configuration.IgniteConfiguration" scope="prototype"
+          p:gridName="#{T(java.util.UUID).randomUUID().toString()}"
           p:localHost="127.0.0.2"
           p:discoverySpi-ref="discoverySpi"
           p:cacheConfiguration-ref="cacheConfig"
