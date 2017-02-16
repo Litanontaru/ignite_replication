@@ -19,7 +19,7 @@ public class PlannerUtil {
     }
 
     public static Map<UUID, List<Long>> plan(List<TxInfo> transactions, List<Long> committed, List<Long> inProgress) {
-        long currentId = transactions.get(0).getId();
+        long currentId = 0;
 
         Set<IgniteBiTuple<String, Object>> blocked = new HashSet<>();
         Map<UUID, Set<IgniteBiTuple<String, Object>>> claimed = new HashMap<>();
