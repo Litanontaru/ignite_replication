@@ -26,10 +26,25 @@
         </property>
     </bean>
 
+    <bean id="lead" class="org.apache.ignite.replication.subscriber.LeadServiceImpl"/>
+    <bean id="reader" class="org.apache.ignite.replication.subscriber.ReaderServiceImpl"/>
+    <util:list id="services">
+        <bean class="org.apache.ignite.services.ServiceConfiguration"
+              p:name="Lead"
+              p:maxPerNodeCount="1"
+              p:totalCount="1"
+              p:service-ref="lead"/>
+        <bean class="org.apache.ignite.services.ServiceConfiguration"
+              p:name="Reader"
+              p:maxPerNodeCount="1"
+              p:service-ref="reader"/>
+    </util:list>
+
     <bean id="ignite" class="org.apache.ignite.configuration.IgniteConfiguration" scope="prototype"
           p:localHost="127.0.0.2"
           p:discoverySpi-ref="discoverySpi"
-          p:cacheConfiguration-ref="cacheConfig"/>
+          p:cacheConfiguration-ref="cacheConfig"
+          p:serviceConfiguration-ref="services"/>
 
     <!-- Caches configuration -->
     <util:list id="cacheConfig">
@@ -51,5 +66,5 @@
 
     <bean id="serializer" class="org.apache.ignite.replication.publisher.SerializerImpl"/>
 
-    <bean id="kafkaFactory" class="org.apache.ignite.replication.kafka.KafkaFa_r    ctoryImpl" destroy-method="closeAll"/>
+    <bean id="kafkaFactory" class="org.apache.ignite.replication.kafka.KafkaFactoryImpl" destroy-method="closeAll"/>
 </beans>
