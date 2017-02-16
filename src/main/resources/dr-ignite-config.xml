@@ -27,6 +27,7 @@
     </bean>
 
     <bean id="ignite" class="org.apache.ignite.configuration.IgniteConfiguration" scope="prototype"
+          p:gridName="#{T(java.util.UUID).randomUUID().toString()}"
           p:localHost="127.0.0.2"
           p:discoverySpi-ref="discoverySpi"
           p:cacheConfiguration-ref="cacheConfig"/>
@@ -50,5 +51,5 @@
 
     <bean id="serializer" class="org.apache.ignite.replication.publisher.SerializerImpl"/>
 
-    <bean id="kafkaFactory" class="org.apache.ignite.replication.kafka.KafkaFa_r    ctoryImpl" destroy-method="closeAll"/>
+    <bean id="kafkaFactory" class="org.apache.ignite.replication.kafka.KafkaFactoryImpl" destroy-method="closeAll"/>
 </beans>

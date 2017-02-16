@@ -11,6 +11,10 @@ public class MainIgnite {
         embeddedKafka.setUp();
         Ignite ignite = Ignition.start("ignite-config.xml");
 
+        //Add more nodes
+        Ignition.start("ignite-config.xml");
+        Ignition.start("ignite-config.xml");
+
         System.out.println("Started");
 
         IgniteCache<Object, Object> userCache = ignite.cache("userCache");
