@@ -1,9 +1,6 @@
 package org.apache.ignite.replication.publisher;
 
 import org.apache.ignite.replication.kafka.KafkaFactory;
-import org.apache.ignite.replication.message.TransactionMessage;
-import org.apache.ignite.replication.message.TransactionMessageBuilder;
-import org.apache.ignite.replication.message.TransactionMessageUtil;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
@@ -28,26 +25,15 @@ public class TransactionalKafkaProducer {
     }
 
     @SuppressWarnings("unchecked")
-    public Future<RecordMetadata> writeTransaction(long transactionId, Map<String,
-            Collection<Cache.Entry<?, ?>>> updates) throws CacheWriterException {
+    public Future<RecordMetadata> writeTransaction(long transactionId, Map<String, Collection<Cache.Entry<?, ?>>> updates) throws CacheWriterException {
         try {
-            TransactionMessage message = convertToMessage(transactionId, updates);
-            Object key = serializer.serialize(message.metadata);
-            Object value = serializer.serialize(message.values);
-            int partition = TransactionMessageUtil.partitionFor(message.metadata, partitions);
+            int partition = Long.hashCode(transactionId) % partitions;
+            Object key = serializer.serialize(transactionId);
+            Object value = serializer.serialize(updates);
             ProducerRecord record = new ProducerRecord(dataTopic, partition, key, value);
             return producer.send(record);
         } catch (Exception e) {
             throw new CacheWriterException(e);
         }
-    }
-
-    private TransactionMessage convertToMessage(long transactionId, Map<String, Collection<Cache.Entry<?, ?>>> updates) {
-        TransactionMessageBuilder messageBuilder = new TransactionMessageBuilder();
-        messageBuilder.setTransactionId(transactionId);
-        for (Map.Entry<String, Collection<Cache.Entry<?, ?>>> cacheToUpdates : updates.entrySet()) {
-            messageBuilder.addCacheEntries(cacheToUpdates.getKey(), cacheToUpdates.getValue());
-        }
-        return messageBuilder.build();
     }
 }
