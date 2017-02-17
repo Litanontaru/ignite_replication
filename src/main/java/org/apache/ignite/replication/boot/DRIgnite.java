@@ -16,5 +16,9 @@ public class DRIgnite {
         Ignition.start("dr-ignite-config.xml");
 
         System.out.println("Started");
+
+        //todo check
+
+        Ignition.stopAll(true);
     }
 }
