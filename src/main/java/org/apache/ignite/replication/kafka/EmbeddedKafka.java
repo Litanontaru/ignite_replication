@@ -85,6 +85,7 @@ public class EmbeddedKafka {
             properties.setProperty("log.retention.ms", String.valueOf(Long.MAX_VALUE));
             properties.setProperty("controlled.shutdown.enable", String.valueOf(false));
             properties.setProperty("delete.topic.enable", String.valueOf(true));
+            properties.setProperty("num.partitions", String.valueOf(3));
 
             KafkaServerStartable broker = startBroker(properties);
             brokers.add(broker);

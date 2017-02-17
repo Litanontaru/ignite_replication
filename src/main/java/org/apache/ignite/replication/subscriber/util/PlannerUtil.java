@@ -31,7 +31,7 @@ public class PlannerUtil {
             }
             if (!committed.contains(id)) {
                 List<IgniteBiTuple<String, Object>> scope = info.getScope();
-                if (inProgress.contains(id) || scope.stream().allMatch(blocked::contains)) {
+                if (inProgress.contains(id) || scope.stream().anyMatch(blocked::contains)) {
                     blocked.addAll(scope);
                 } else {
                     UUID consumerId = info.consumerId();
@@ -51,6 +51,6 @@ public class PlannerUtil {
     private static boolean isIntersectedWithClaimed(UUID consumerId, List<IgniteBiTuple<String, Object>> scope, Map<UUID, Set<IgniteBiTuple<String, Object>>> claimed) {
         return claimed.entrySet().stream()
                 .filter(entry -> !entry.getKey().equals(consumerId))
-                .allMatch(entry -> scope.stream().anyMatch(e -> entry.getValue().contains(e)));
+                .anyMatch(entry -> scope.stream().anyMatch(e -> entry.getValue().contains(e)));
     }
 }
